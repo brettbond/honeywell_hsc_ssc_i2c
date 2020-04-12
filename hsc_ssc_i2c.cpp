@@ -33,7 +33,6 @@
    
 */
 
-#include <Wire.h>
 #include "hsc_ssc_i2c.h"
 
 /* you must define the slave address. you can find it based on the part number:
@@ -62,13 +61,13 @@
 ///         2 if old data is being read
 ///         3 if a diagnostic fault is triggered in the chip
 ///         4 if the sensor is not hooked up
-uint8_t ps_get_raw(const uint8_t slave_addr, struct cs_raw *raw)
+uint8_t ps_get_raw(const uint8_t slave_addr, struct cs_raw *raw, TwoWire *wire=&Wire)
 {
     uint8_t i, val[4] = { 0, 0, 0, 0 };
-    Wire.requestFrom(slave_addr, (uint8_t) 4);
+    wire->requestFrom(slave_addr, (uint8_t) 4);
     for (i = 0; i <= 3; i++) {
         delay(4);                        // sensor might be missing, do not block
-        val[i] = Wire.read();            // by using Wire.available()
+        val[i] = wire->read();            // by using Wire.available()
     }
     raw->status = (val[0] & 0xc0) >> 6;  // first 2 bits from first byte
     raw->bridge_data = ((val[0] & 0x3f) << 8) + val[1];

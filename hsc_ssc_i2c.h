@@ -6,6 +6,7 @@
 #else
 #include <WProgram.h>
 #endif
+#include <Wire.h>
 
 struct cs_raw {
     uint8_t status;             // 2 bit
@@ -27,7 +28,7 @@ struct cs_raw {
 ///         2 if old data is being read
 ///         3 if a diagnostic fault is triggered in the chip
 ///         4 if the sensor is not hooked up
-uint8_t ps_get_raw(const uint8_t slave_addr, struct cs_raw *raw);
+uint8_t ps_get_raw(const uint8_t slave_addr, struct cs_raw *raw, TwoWire *wire);
 
 /// function that converts raw data read from the sensor into temperature and pressure values
 ///
